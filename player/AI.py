@@ -251,6 +251,11 @@ class AI:
 
 
     def calculateb(self, gametiles):
+        #questins to ask:
+        #all email questions
+        #outside variable to record # of steps, etc.,
+
+        
         # list of reference: 
         # https://en.wikipedia.org/wiki/Chess_piece_relative_value#:~:text=Lasker%20adjusts%20some%20of%20these,%2C%20h%2Dfile%20rook%20%3D%205.25
         # https://arxiv.org/pdf/2009.04374.pdf
@@ -261,106 +266,109 @@ class AI:
         value = 0
         
         # Determine game phase based on queens count
-        player_queens = sum(1 for x in range(8) for y in range(8) if gametiles[y][x].pieceonTile.tostring() == 'q')
-        opponent_queens = sum(1 for x in range(8) for y in range(8) if gametiles[y][x].pieceonTile.tostring() == 'Q')
-        total_queens = player_queens + opponent_queens
+        ai_queens = sum(1 for x in range(8) for y in range(8) if gametiles[y][x].pieceonTile.tostring() == 'Q')
+        opponent_queens = sum(1 for x in range(8) for y in range(8) if gametiles[y][x].pieceonTile.tostring() == 'q')
+        total_queens = ai_queens + opponent_queens
         
         
         if total_queens == 0:
             game_phase = "endgame"
-        elif player_queens == opponent_queens: #queen 1v1 or 2v2 
+        elif ai_queens == opponent_queens: #queen 1v1 or 2v2 
             game_phase = "middle game"
         else: #uneven queen numbers
             game_phase = "threshold"
             
         
         # Define piece values based on the game phase
+        inner_centers = [(3,3),(3,4),(4,3),(4,4)]
+        outter_centers = [(2,2),(2,3),(2,4),(2,5),(3,2),(4,2),(5,2),(3,5),(4,5),(5,5),(5,3),(5,4)]
         piece_values = {
             "middle game": {
                 'p': 8, 'P': -8,
                 'n': 32, 'N': -32,
-                'b': 33.1, 'B': -33.1,
+                'b': 33, 'B': -33,
                 'r': 47, 'R': -47,  # considering first rook
                 'q': 0, 'Q': 0 
             },
             "threshold": {
                 'p': 9, 'P': -9,
                 'n': 32, 'N': -32,
-                'b': 33.1, 'B': -33.1,
+                'b': 33, 'B': -33,
                 'r': 48, 'R': -48,  # considering first rook
                 'q': 94, 'Q': -94
             },
             "endgame": {
                 'p': 10, 'P': -10,
                 'n': 32, 'N': -32,
-                'b': 33.1, 'B': -33.1,
+                'b': 33, 'B': -33,
                 'r': 53, 'R': -53,  # considering first rook
                 'q': 0, 'Q': 0     
             }
         }
         
-        bishops_count = {'player': 0, 'opponent': 0}
-        rooks_count = {'player': 0, 'opponent': 0}
-        
+        bishops_count = {'ai': 0, 'opponent': 0}
+        rooks_count = {'ai': 0, 'opponent': 0}
+        #black is capital, white is lowercase
         for x in range(8):
             for y in range(8):
                 piece = gametiles[y][x].pieceonTile.tostring()
                 
                 # Counting bishops and rooks for bonuses or second piece adjustment
                 if piece == 'b':
-                    bishops_count['player'] += 1
+                    bishops_count['ai'] += 1
                 elif piece == 'B':
                     bishops_count['opponent'] += 1
                 elif piece == 'r':
-                    rooks_count['player'] += 1
+                    rooks_count['ai'] += 1
                 elif piece == 'R':
                     rooks_count['opponent'] += 1
+                    
                 temp_value = piece_values[game_phase].get(piece, 0)
                 
                 #check for pawn having different value in mid game based on file
-                if piece == "p" or "P":
-                    if game_phase == "middle game": #mid game pawn difference
+                if piece == "p" or piece == "P":
+                    #pawn structure modification
+                    if game_phase == "middle game": 
                         if y == 0 or y == 7:#rook pawn
-                            value += temp_value * 0.7
+                            temp_value *= 0.7
                         elif y == 1 or y == 6:
-                            value += temp_value * 0.85 #bishop pawn
+                            temp_value *= 0.85 #bishop pawn
                         elif y == 2 or y == 5:
-                            value += temp_value * 0.9#knight pawn
-                        else:
-                            value += temp_value
+                            temp_value *= 0.9#knight pawn
+
                         
-                else:
-                    value += temp_value
+                
+                value += temp_value
                     
         # Adding Bishop Pair Bonuses
         if game_phase == "middle game":
-            if bishops_count['player'] == 2:
-                value += 3
-            if bishops_count['opponent'] == 2:
+            if bishops_count['ai'] == 2:
                 value -= 3
+            if bishops_count['opponent'] == 2:
+                value += 3
         elif game_phase == "threshold":
-            if bishops_count['player'] == 2:
-                value += 4
-            if bishops_count['opponent'] == 2:
+            if bishops_count['ai'] == 2:
                 value -= 4
-        elif game_phase == "endgame":
-            if bishops_count['player'] == 2:
-                value += 5
             if bishops_count['opponent'] == 2:
+                value += 4
+        elif game_phase == "endgame":
+            if bishops_count['ai'] == 2:
                 value -= 5
+            if bishops_count['opponent'] == 2:
+                value += 5
         
         # Adjust for second rook values
-        if rooks_count['player'] == 2:
-            value += 45 if game_phase == "middle game" else (49 if game_phase == "threshold" else 5)
-        if rooks_count['opponent'] == 2:
+        if rooks_count['ai'] == 2:
             value -= 45 if game_phase == "middle game" else (49 if game_phase == "threshold" else 5)
+        if rooks_count['opponent'] == 2:
+            value += 45 if game_phase == "middle game" else (49 if game_phase == "threshold" else 5)
 
         # Adjust for second queen values in threshold phase
         if game_phase == "threshold":
-            if player_queens == 2:
-                value += 87
-            if opponent_queens == 2:
+            if ai_queens == 2:
                 value -= 87
+            if opponent_queens == 2:
+                value += 87
 
         return value
 
