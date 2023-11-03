@@ -30,7 +30,7 @@ class AI:
             if zoom[4]==min:
                 chuk.append(zoom)
         fx=random.randrange(len(chuk))
-        #print(tp)
+        print(tp)
         return chuk[fx][0],chuk[fx][1],chuk[fx][2],chuk[fx][3]
 
 
@@ -251,18 +251,10 @@ class AI:
 
 
     def calculateb(self, gametiles):
-        #questins to ask:
-        #all email questions
-        #outside variable to record # of steps, etc.,
-
-        
         # list of reference: 
         # https://en.wikipedia.org/wiki/Chess_piece_relative_value#:~:text=Lasker%20adjusts%20some%20of%20these,%2C%20h%2Dfile%20rook%20%3D%205.25
         # https://arxiv.org/pdf/2009.04374.pdf
         # "Chess Board Option" by Larry Kaufman, ISBN: 978-9056919337
-        
-        #x row y column
-        # (y,x) in for loop. row firs
         value = 0
         
         # Determine game phase based on queens count
@@ -281,75 +273,6 @@ class AI:
             ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
             ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']
         ]
-        
-        #prevent wired edge cases 
-        # if gametiles[5][7].pieceonTile.tostring() == 'B' and gametiles[6][6].pieceonTile.tostring() == 'p':
-        #     value += 100
-        # if gametiles[5][0].pieceonTile.tostring() == 'B' and gametiles[6][1].pieceonTile.tostring() == 'p':
-        #     value += 100
-        
-        
-        #check for # of white move:
-        # white_move = 0
-        # for y in [6,7]:
-        #     for x in range(0,8):
-        #         if gametiles[y][x].pieceonTile.tostring() != origin[y][x]:
-        #             white_move += 1
-        # if white_move <=2 :
-        #     first_move = True
-        # else:
-        #     first_move = False    
-                  
-        # if first_move:
-        #     if any(gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(3,0), (3,1), (3,2), (3,3), (3,4), (3,5), (3,6), (3,7)]):
-        #         value += 100
-        #     if not (gametiles[4][4].pieceonTile.tostring() == 'p' or  gametiles[4][2].pieceonTile.tostring() == 'p' ):#W did notstart with d pawn or f pawn
-        #         if gametiles[3][3].pieceonTile.tostring() == 'P':
-        #             value -= 100
-        #     else:
-        #         if gametiles[3][4].pieceonTile.tostring() == 'P':
-        #             value -= 100
-
-        #if already moved d pawn
-        # if all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'P' for pawn_position in [(1,0), (1,1), (1,2), (3,3), (1,4), (1,5), (1,6), (1,7)]) and white_move<4:
-        #     if not (gametiles[4][2].pieceonTile.tostring() == 'p' or gametiles[4][4].pieceonTile.tostring() == 'p' or gametiles[4][6].pieceonTile.tostring() == 'p'):
-        #         if gametiles[3][5].pieceonTile.tostring() == 'B':
-        #             value -= 1000
-        
-        # if all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7)]):#all panws in initial position
-        #     if gametiles[5][5].pieceonTile.tostring() == 'k':
-        #         b_knight_open = True
-        #     if gametiles[5][2].pieceonTile.tostring() == 'k':
-        #         g_knight_open = True
-            
-        # #white open with f pawn
-        # if all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (4,2), (6,3), (6,4), (6,5), (6,6), (6,7)]):
-        #     f_open =True
-            
-        # #white open with e pawn
-        # elif all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (6,2), (4,3), (6,4), (6,5), (6,6), (6,7)]):
-        #     e_open = True
-
-        # #white open with d pawn
-        # elif all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (6,2), (6,3), (4,4), (6,5), (6,6), (6,7)]):
-        #     d_open = True
-        
-        # #white open with c pawn
-        # elif all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (6,2), (6,3), (6,4), (4,5), (6,6), (6,7)]):
-        #     c_open = True
-            
-        
-        
-        
-            
-            
-            
-        
-        
-        
-        
-        
-        
         
         if total_queens == 0:
             game_phase = "endgame"
@@ -411,49 +334,88 @@ class AI:
                     rooks_count['opponent'] += 1
                 
                 temp_value = piece_values[game_phase].get(piece, 0)
-
-                #piece dont move penalty
-                # if y == 0 and piece != 'K':
-                #     if origin[y][x] == piece:
-                #         temp_value -=2
-                # if y == 7 and piece != 'k':
-                #     if origin[y][x] == piece:
-                #         temp_value -=2
                 
-                
-                if piece == 'Q' or piece == 'q':
-                    total_piece_value = temp_value
-                if piece == 'K' or piece == 'k':
-                    total_piece_value = temp_value
                 if piece == 'B' or piece == 'b':
-                    # if piece == 'B':
-                    #     if (y,x) in [(0,5),(0,2)]:
-                    #         total_bishop_modifier -= 1
-                    # if piece == 'b':
-                    #     if (y,x) in [(7,2),(7,5)]:
-                    #         total_bishop_modifier -= 1
+                    # Central control bonus
+                    if (y, x) in inner_centers:
+                        total_bishop_modifier += 2
+                    elif (y, x) in outter_centers:
+                        total_bishop_modifier += 1
+
+                    # Diagonal control bonus
+                    diagonal_control = sum(1 for i in range(8) if gametiles[y][i].pieceonTile.tostring() in ['p', 'P'] or gametiles[i][x].pieceonTile.tostring() in ['p', 'P'])
+                    total_bishop_modifier += diagonal_control*0.2
                     total_piece_value = temp_value + total_bishop_modifier
 
+                # Rook modification
                 if piece == 'R' or piece == 'r':
-                    if piece == 'R':
-                        if (y,x) in [(0,7),(0,7)]:
-                            total_rook_modifier -= 2
-                    if piece == 'r':
-                        if (y,x) in [(7,7),(7,7)]:
-                            total_rook_modifier -= 2
+                    # open file bonus
+                    file_occupied_by_pawns = any(gametiles[i][x].pieceonTile.tostring() in ['p', 'P'] for i in range(8))
+                    if not file_occupied_by_pawns:
+                        total_rook_modifier += 2
+
+                    # Seventh rank bonus
+                    if (piece == 'r' and y == 1) or (piece == 'R' and y == 6):
+                        total_rook_modifier += 1
+
                     total_piece_value = temp_value + total_rook_modifier
 
-                
-                #knight center square modifucation:
-                if piece == 'N' or piece == 'n': 
-                    if (y,x) in  inner_centers:
-                        temp_value += 3
-                    elif (y,x) in outter_centers:
-                        temp_value += 1
+                # Queen modification
+                if piece == 'Q' or piece == 'q':
+                    total_queen_modifier = 0
+                    # Central control bonus
+                    if (y, x) in inner_centers:
+                        total_queen_modifier += 2
+                    elif (y, x) in outter_centers:
+                        total_queen_modifier += 1
+                    
+                    # Mobility bonus
+                    queen_mobility = 0
+                    # Calculate mobility in all directions from the queen's position
+                    directions = [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+                    for dy, dx in directions:
+                        ny, nx = y + dy, x + dx
+                        while 0 <= ny < 8 and 0 <= nx < 8:
+                            if gametiles[ny][nx].pieceonTile.tostring() == '-':
+                                queen_mobility += 1
+                            else:
+                                # Stop counting in this direction if another piece is encountered
+                                break
+                            ny += dy
+                            nx += dx
+                    total_queen_modifier += queen_mobility *0.2  # Modify this divisor to scale the mobility effect
+
+                    total_piece_value = temp_value + total_queen_modifier
+                if piece == 'K' or piece == 'k':
                     total_piece_value = temp_value
+
+                #knight center square modifucation:
+                if piece == 'N' or piece == 'n':
+                    total_knight_modifier = 0
+
+                    # center
+                    if (y, x) in inner_centers:
+                        total_knight_modifier += 2
+                    elif (y, x) in outter_centers:
+                        total_knight_modifier += 1
+
+                    # protected bonus
+                    pawn_directions = [(-1, -1), (-1, 1)] if piece == 'n' else [(1, -1), (1, 1)]
+                    for pdy, pdx in pawn_directions:
+                        if 0 <= y + pdy < 8 and 0 <= x + pdx < 8:
+                            if gametiles[y + pdy][x + pdx].pieceonTile.tostring() in ['p', 'P']:
+                                total_knight_modifier += 1
+
+                    # Mobility bonus
+                    knight_moves = [(2, 1), (1, 2), (-1, -2), (-2, -1), (-2, 1), (-1, 2), (1, -2), (2, -1)]
+                    mobility = sum(1 for dy, dx in knight_moves if 0 <= y + dy < 8 and 0 <= x + dx < 8)
+                    total_knight_modifier += mobility*0.3
+
+                    total_piece_value = temp_value + total_knight_modifier
                         
-                #check for pawn having different value in mid game based on file
+                #pawn modification
                 if piece == "p" or piece == "P": 
+                    
                     #blocked pawn modifier
                     if piece == 'p':
                         if y >= 1:
@@ -547,7 +509,18 @@ class AI:
                         if y == 6:
                             total_pawn_modifier -= 2 
                         elif y == 5:
-                            total_pawn_modifier += 1
+                            total_pawn_modifier -=1.5
+                            if x == 0:
+                                if gametiles[4][1].pieceonTile.tostring() == 'p':
+                                   total_pawn_modifier +=1.5 
+                            elif x == 7:
+                                if gametiles[4][7].pieceonTile.tostring() == 'p':
+                                   total_pawn_modifier +=1.5
+                            else:
+                                if gametiles[4][x + 1].pieceonTile.tostring() == 'p':
+                                   total_pawn_modifier +=1
+                                elif gametiles[4][x - 1].pieceonTile.tostring() == 'p':
+                                   total_pawn_modifier +=1
                         elif y == 4:
                             total_pawn_modifier += 2
                         elif y == 3:
@@ -555,14 +528,23 @@ class AI:
                         elif y == 2:
                             total_pawn_modifier += 1*temp_value
                         elif y == 1:
-                            total_pawn_modifier += 5*temp_value
-                        elif y == 0:
-                            total_pawn_modifier += 90       
+                            total_pawn_modifier += 2*temp_value      
                     if piece == 'P':
                         if y == 1:
                             total_pawn_modifier -= 2 
                         elif y == 2:
-                            total_pawn_modifier += 1
+                            total_pawn_modifier -=1.5
+                            if x == 0:
+                                if gametiles[3][1].pieceonTile.tostring() == 'p':
+                                   total_pawn_modifier +=1.5 
+                            elif x == 7:
+                                if gametiles[3][7].pieceonTile.tostring() == 'p':
+                                   total_pawn_modifier +=1.5
+                            else:
+                                if gametiles[3][x + 1].pieceonTile.tostring() == 'p':
+                                   total_pawn_modifier +=1
+                                elif gametiles[3][x - 1].pieceonTile.tostring() == 'p':
+                                   total_pawn_modifier +=1
                         elif y == 3:
                             total_pawn_modifier += 2
                         elif y == 4:
@@ -570,9 +552,7 @@ class AI:
                         elif y == 5:
                             total_pawn_modifier += 1*temp_value
                         elif y == 6:
-                            total_pawn_modifier += 5*temp_value
-                        elif y == 7:
-                            total_pawn_modifier += 90
+                            total_pawn_modifier += 2*temp_value
 
                     #mid game pawn modifier
                     if game_phase == "middle game": 
@@ -597,8 +577,7 @@ class AI:
                                 if gametiles[y + 1][x + 1].pieceonTile.tostring() == 'p' :
                                     total_pawn_modifier += pawn_structure_modifier
                                 if gametiles[y + 1][x - 1].pieceonTile.tostring() == 'p' :
-                                    total_pawn_modifier += pawn_structure_modifier
-                                    
+                                    total_pawn_modifier += pawn_structure_modifier      
                         elif piece == 'P':
                             if x ==  0 : #left most column pawns
                                 if gametiles[y - 1][x + 1].pieceonTile.tostring() == 'P' :
