@@ -30,7 +30,7 @@ class AI:
             if zoom[4]==min:
                 chuk.append(zoom)
         fx=random.randrange(len(chuk))
-        print(tp)
+        #print(tp)
         return chuk[fx][0],chuk[fx][1],chuk[fx][2],chuk[fx][3]
 
 
@@ -262,13 +262,93 @@ class AI:
         # "Chess Board Option" by Larry Kaufman, ISBN: 978-9056919337
         
         #x row y column
-
+        # (y,x) in for loop. row firs
         value = 0
         
         # Determine game phase based on queens count
         ai_queens = sum(1 for x in range(8) for y in range(8) if gametiles[y][x].pieceonTile.tostring() == 'Q')
         opponent_queens = sum(1 for x in range(8) for y in range(8) if gametiles[y][x].pieceonTile.tostring() == 'q')
         total_queens = ai_queens + opponent_queens
+        
+        #check the number of pieces that doesnt overlap with original position to determine the number of moves
+        origin = [
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']
+        ]
+        
+        #prevent wired edge cases 
+        # if gametiles[5][7].pieceonTile.tostring() == 'B' and gametiles[6][6].pieceonTile.tostring() == 'p':
+        #     value += 100
+        # if gametiles[5][0].pieceonTile.tostring() == 'B' and gametiles[6][1].pieceonTile.tostring() == 'p':
+        #     value += 100
+        
+        
+        #check for # of white move:
+        # white_move = 0
+        # for y in [6,7]:
+        #     for x in range(0,8):
+        #         if gametiles[y][x].pieceonTile.tostring() != origin[y][x]:
+        #             white_move += 1
+        # if white_move <=2 :
+        #     first_move = True
+        # else:
+        #     first_move = False    
+                  
+        # if first_move:
+        #     if any(gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(3,0), (3,1), (3,2), (3,3), (3,4), (3,5), (3,6), (3,7)]):
+        #         value += 100
+        #     if not (gametiles[4][4].pieceonTile.tostring() == 'p' or  gametiles[4][2].pieceonTile.tostring() == 'p' ):#W did notstart with d pawn or f pawn
+        #         if gametiles[3][3].pieceonTile.tostring() == 'P':
+        #             value -= 100
+        #     else:
+        #         if gametiles[3][4].pieceonTile.tostring() == 'P':
+        #             value -= 100
+
+        #if already moved d pawn
+        # if all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'P' for pawn_position in [(1,0), (1,1), (1,2), (3,3), (1,4), (1,5), (1,6), (1,7)]) and white_move<4:
+        #     if not (gametiles[4][2].pieceonTile.tostring() == 'p' or gametiles[4][4].pieceonTile.tostring() == 'p' or gametiles[4][6].pieceonTile.tostring() == 'p'):
+        #         if gametiles[3][5].pieceonTile.tostring() == 'B':
+        #             value -= 1000
+        
+        # if all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7)]):#all panws in initial position
+        #     if gametiles[5][5].pieceonTile.tostring() == 'k':
+        #         b_knight_open = True
+        #     if gametiles[5][2].pieceonTile.tostring() == 'k':
+        #         g_knight_open = True
+            
+        # #white open with f pawn
+        # if all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (4,2), (6,3), (6,4), (6,5), (6,6), (6,7)]):
+        #     f_open =True
+            
+        # #white open with e pawn
+        # elif all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (6,2), (4,3), (6,4), (6,5), (6,6), (6,7)]):
+        #     e_open = True
+
+        # #white open with d pawn
+        # elif all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (6,2), (6,3), (4,4), (6,5), (6,6), (6,7)]):
+        #     d_open = True
+        
+        # #white open with c pawn
+        # elif all (gametiles[pawn_position[0]][pawn_position[1]].pieceonTile.tostring() == 'p' for pawn_position in [(6,0), (6,1), (6,2), (6,3), (6,4), (4,5), (6,6), (6,7)]):
+        #     c_open = True
+            
+        
+        
+        
+            
+            
+            
+        
+        
+        
+        
+        
         
         
         if total_queens == 0:
@@ -278,31 +358,35 @@ class AI:
         else: #uneven queen numbers
             game_phase = "threshold"
             
+            
         
         # Define piece values based on the game phase
         inner_centers = [(3,3),(3,4),(4,3),(4,4)]
         outter_centers = [(2,2),(2,3),(2,4),(2,5),(3,2),(4,2),(5,2),(3,5),(4,5),(5,5),(5,3),(5,4)]
         piece_values = {
             "middle game": {
-                'p': 8, 'P': -8,
-                'n': 32, 'N': -32,
-                'b': 33, 'B': -33,
-                'r': 47, 'R': -47,  # considering first rook
-                'q': 0, 'Q': 0 
+                'p': 8, 'P': 8,
+                'n': 32, 'N': 32,
+                'b': 33, 'B': 33,
+                'r': 47, 'R': 47,  # considering first rook
+                'q': 100, 'Q': 100,
+                'k':10000, 'K':10000
             },
             "threshold": {
-                'p': 9, 'P': -9,
-                'n': 32, 'N': -32,
-                'b': 33, 'B': -33,
-                'r': 48, 'R': -48,  # considering first rook
-                'q': 94, 'Q': -94
+                'p': 9, 'P': 9,
+                'n': 32, 'N': 32,
+                'b': 33, 'B': 33,
+                'r': 48, 'R': 48,  # considering first rook
+                'q': 94, 'Q': 94,
+                'k':10000, 'K':10000
             },
             "endgame": {
-                'p': 10, 'P': -10,
-                'n': 32, 'N': -32,
-                'b': 33, 'B': -33,
-                'r': 53, 'R': -53,  # considering first rook
-                'q': 0, 'Q': 0     
+                'p': 10, 'P': 10,
+                'n': 32, 'N': 32,
+                'b': 33, 'B': 33,
+                'r': 53, 'R': 53,  # considering first rook
+                'q': 100, 'Q': 100,
+                'k':10000, 'K':10000     
             }
         }
         
@@ -311,8 +395,11 @@ class AI:
         #black is capital, white is lowercase
         for x in range(8):
             for y in range(8):
+                total_piece_value = 0
+                total_pawn_modifier = 0
+                total_bishop_modifier = 0
+                total_rook_modifier = 0
                 piece = gametiles[y][x].pieceonTile.tostring()
-                
                 # Counting bishops and rooks for bonuses or second piece adjustment
                 if piece == 'b':
                     bishops_count['ai'] += 1
@@ -322,24 +409,216 @@ class AI:
                     rooks_count['ai'] += 1
                 elif piece == 'R':
                     rooks_count['opponent'] += 1
-                    
+                
                 temp_value = piece_values[game_phase].get(piece, 0)
-                
-                #check for pawn having different value in mid game based on file
-                if piece == "p" or piece == "P":
-                    #pawn structure modification
-                    if game_phase == "middle game": 
-                        if y == 0 or y == 7:#rook pawn
-                            temp_value *= 0.7
-                        elif y == 1 or y == 6:
-                            temp_value *= 0.85 #bishop pawn
-                        elif y == 2 or y == 5:
-                            temp_value *= 0.9#knight pawn
 
-                        
+                #piece dont move penalty
+                # if y == 0 and piece != 'K':
+                #     if origin[y][x] == piece:
+                #         temp_value -=2
+                # if y == 7 and piece != 'k':
+                #     if origin[y][x] == piece:
+                #         temp_value -=2
                 
-                value += temp_value
-                    
+                
+                if piece == 'Q' or piece == 'q':
+                    total_piece_value = temp_value
+                if piece == 'K' or piece == 'k':
+                    total_piece_value = temp_value
+                if piece == 'B' or piece == 'b':
+                    # if piece == 'B':
+                    #     if (y,x) in [(0,5),(0,2)]:
+                    #         total_bishop_modifier -= 1
+                    # if piece == 'b':
+                    #     if (y,x) in [(7,2),(7,5)]:
+                    #         total_bishop_modifier -= 1
+                    total_piece_value = temp_value + total_bishop_modifier
+
+                if piece == 'R' or piece == 'r':
+                    if piece == 'R':
+                        if (y,x) in [(0,7),(0,7)]:
+                            total_rook_modifier -= 2
+                    if piece == 'r':
+                        if (y,x) in [(7,7),(7,7)]:
+                            total_rook_modifier -= 2
+                    total_piece_value = temp_value + total_rook_modifier
+
+                
+                #knight center square modifucation:
+                if piece == 'N' or piece == 'n': 
+                    if (y,x) in  inner_centers:
+                        temp_value += 3
+                    elif (y,x) in outter_centers:
+                        temp_value += 1
+                    total_piece_value = temp_value
+                        
+                #check for pawn having different value in mid game based on file
+                if piece == "p" or piece == "P": 
+                    #blocked pawn modifier
+                    if piece == 'p':
+                        if y >= 1:
+                            if gametiles[y-1][x].pieceonTile.tostring() != '-':#blocked
+                                total_pawn_modifier -= 2
+                    elif piece == 'P':
+                        if y <= 0:
+                            if gametiles[y+1][x].pieceonTile.tostring() != '-':#blocked
+                                total_pawn_modifier -= 2
+
+                    # Passed Pawn Modifier 
+                    if piece == "p": #white, lowercase, start at y = 7
+                        passed = True
+                        for i in range(y-1, 0, -1):
+                            if x == 0: #left most column, check for same column and column at right
+                                if gametiles[i][x].pieceonTile.tostring() == 'P' or gametiles[i][x+1].pieceonTile.tostring() == 'P' :
+                                    passed = False
+                                    break
+                            elif x == 7: #right most
+                                if gametiles[i][x].pieceonTile.tostring() == 'P' or gametiles[i][x-1].pieceonTile.tostring() == 'P' :
+                                    passed = False
+                                    break
+                            else:
+                                if gametiles[i][x].pieceonTile.tostring() == 'P' or gametiles[i][x-1].pieceonTile.tostring() == 'P' or gametiles[i][y+1].pieceonTile.tostring() == 'P' :
+                                    passed = False
+                                    break
+                        if passed:
+                            passed_pawn_modifier = 0.5 if y < 4 else 0.3
+                            total_pawn_modifier += temp_value * passed_pawn_modifier
+                    elif piece == "P": 
+                        passed = True
+                        for i in range(y+1, 7, 1):
+                            if x == 0: #left most column, check for same column and column at right
+                                if gametiles[i][x].pieceonTile.tostring() == 'p' or gametiles[i][x+1].pieceonTile.tostring() == 'p' :
+                                    passed = False
+                                    break
+                            elif x == 7: #right most
+                                if gametiles[i][x].pieceonTile.tostring() == 'p' or gametiles[i][x-1].pieceonTile.tostring() == 'p' :
+                                    passed = False
+                                    break
+                            else:
+                                if gametiles[i][x].pieceonTile.tostring() == 'p' or gametiles[i][x-1].pieceonTile.tostring() == 'p' or gametiles[i][y+1].pieceonTile.tostring() == 'p' :
+                                    passed = False
+                                    break
+                                
+                        if passed:
+                            passed_pawn_modifier = 0.5 if y > 3 else 0.3
+                            total_pawn_modifier += temp_value * passed_pawn_modifier
+                        #passed pawn modifier end
+                                
+                    #lone pawn modifier
+                    if piece == "p": #white, lowercase, start at x = 7
+                        lone = True
+                        for i in range(1,7):
+                            if x == 0: #left most column, check for same column and column at right
+                                if gametiles[i][x].pieceonTile.tostring() == 'p' or gametiles[i][x+1].pieceonTile.tostring() == 'p' :
+                                    lone = False
+                                    break
+                            elif x == 7: #right most
+                                if gametiles[i][x].pieceonTile.tostring() == 'p' or gametiles[i][x-1].pieceonTile.tostring() == 'p' :
+                                    lone = False
+                                    break
+                            else:
+                                if gametiles[i][x].pieceonTile.tostring() == 'p' or gametiles[i][x-1].pieceonTile.tostring() == 'p' or gametiles[i][x+1].pieceonTile.tostring() == 'p' :
+                                    lone = False
+                                    break
+                        if lone:
+                            lone_pawn_modifier = 0.3 
+                            total_pawn_modifier -= temp_value * lone_pawn_modifier
+                    elif piece == "P":
+                        lone = True
+                        for i in range(1,7):
+                            if x == 0: #left most column, check for same column and column at right
+                                if gametiles[i][x].pieceonTile.tostring() == 'P' or gametiles[i][x+1].pieceonTile.tostring() == 'P' :
+                                    lone = False
+                                    break
+                            elif x == 7: #right most
+                                if gametiles[i][x].pieceonTile.tostring() == 'P' or gametiles[i][x-1].pieceonTile.tostring() == 'P' :
+                                    lone = False
+                                    break
+                            else:
+                                if gametiles[i][x].pieceonTile.tostring() == 'P' or gametiles[i][x-1].pieceonTile.tostring() == 'P' or gametiles[i][x+1].pieceonTile.tostring() == 'P' :
+                                    lone = False
+                                    break
+                        if lone:
+                            lone_pawn_modifier = 0.3 
+                            total_pawn_modifier -= temp_value * lone_pawn_modifier
+                        
+                    #advancement modifier
+                    if piece == 'p':
+                        if y == 6:
+                            total_pawn_modifier -= 2 
+                        elif y == 5:
+                            total_pawn_modifier += 1
+                        elif y == 4:
+                            total_pawn_modifier += 2
+                        elif y == 3:
+                            total_pawn_modifier += 0.5*temp_value
+                        elif y == 2:
+                            total_pawn_modifier += 1*temp_value
+                        elif y == 1:
+                            total_pawn_modifier += 5*temp_value
+                        elif y == 0:
+                            total_pawn_modifier += 90       
+                    if piece == 'P':
+                        if y == 1:
+                            total_pawn_modifier -= 2 
+                        elif y == 2:
+                            total_pawn_modifier += 1
+                        elif y == 3:
+                            total_pawn_modifier += 2
+                        elif y == 4:
+                            total_pawn_modifier += 0.5*temp_value
+                        elif y == 5:
+                            total_pawn_modifier += 1*temp_value
+                        elif y == 6:
+                            total_pawn_modifier += 5*temp_value
+                        elif y == 7:
+                            total_pawn_modifier += 90
+
+                    #mid game pawn modifier
+                    if game_phase == "middle game": 
+                        if x == 0 or x == 7: #rook pawn
+                            total_pawn_modifier -= temp_value * 0.3
+                        elif x == 1 or x == 6:
+                            total_pawn_modifier -= temp_value * 0.15 #bishop pawn
+                        elif x == 2 or x == 5:
+                            total_pawn_modifier -= temp_value * 0.1 #knight pawn
+                                            
+                    #pawn structure modifier
+                    if 0<y<7 : 
+                        pawn_structure_modifier = temp_value*0.2
+                        if piece == 'p':
+                            if x ==  0 : #left most column pawns
+                                if gametiles[y + 1][x + 1].pieceonTile.tostring() == 'p' :
+                                    total_pawn_modifier += pawn_structure_modifier
+                            elif x == 7   : #right most
+                                if gametiles[y + 1][x - 1].pieceonTile.tostring() == 'p' :
+                                    total_pawn_modifier += pawn_structure_modifier
+                            else:
+                                if gametiles[y + 1][x + 1].pieceonTile.tostring() == 'p' :
+                                    total_pawn_modifier += pawn_structure_modifier
+                                if gametiles[y + 1][x - 1].pieceonTile.tostring() == 'p' :
+                                    total_pawn_modifier += pawn_structure_modifier
+                                    
+                        elif piece == 'P':
+                            if x ==  0 : #left most column pawns
+                                if gametiles[y - 1][x + 1].pieceonTile.tostring() == 'P' :
+                                    total_pawn_modifier += pawn_structure_modifier
+                            elif x == 7   : #right most
+                                if gametiles[y - 1][x - 1].pieceonTile.tostring() == 'P':
+                                    total_pawn_modifier += pawn_structure_modifier
+                            else:
+                                if gametiles[y - 1][x + 1].pieceonTile.tostring() == 'P' :
+                                    total_pawn_modifier += pawn_structure_modifier
+                                if gametiles[y - 1][x - 1].pieceonTile.tostring() == 'P' :
+                                    total_pawn_modifier += pawn_structure_modifier      
+                                                
+                    #mid game pawnvalue difference
+                    total_piece_value = temp_value + total_pawn_modifier
+                
+                if gametiles[y][x].pieceonTile.alliance == "Black":
+                    total_piece_value *= -1
+                value +=  total_piece_value
+                
         # Adding Bishop Pair Bonuses
         if game_phase == "middle game":
             if bishops_count['ai'] == 2:
@@ -356,20 +635,6 @@ class AI:
                 value -= 5
             if bishops_count['opponent'] == 2:
                 value += 5
-        
-        # Adjust for second rook values
-        if rooks_count['ai'] == 2:
-            value -= 45 if game_phase == "middle game" else (49 if game_phase == "threshold" else 5)
-        if rooks_count['opponent'] == 2:
-            value += 45 if game_phase == "middle game" else (49 if game_phase == "threshold" else 5)
-
-        # Adjust for second queen values in threshold phase
-        if game_phase == "threshold":
-            if ai_queens == 2:
-                value -= 87
-            if opponent_queens == 2:
-                value += 87
-
         return value
 
 
